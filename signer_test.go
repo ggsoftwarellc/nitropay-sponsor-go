@@ -11,11 +11,16 @@ func TestSign(t *testing.T) {
 	key := "placeholder"
 	userID := "tester"
 
-	s, err := NewNPSigner(key)
+	s, err := NewSigner(key)
 	if err != nil {
 		t.Error("Unable to create signer: ", err)
 	}
-	token, err := s.Sign(userID)
+
+	userInfo := UserInfo{
+		UserID: userID,
+	}
+
+	token, err := s.Sign(userInfo)
 	if err != nil {
 		t.Error("Error creating token: ", err)
 	}
@@ -30,7 +35,7 @@ func TestSign(t *testing.T) {
 		t.Error("Unable to verify: ", err)
 	}
 
-	nt := NPToken{}
+	nt := Token{}
 	err = json.Unmarshal(payload, &nt)
 	if err != nil {
 		t.Error("Unmarshal payload: ", err)

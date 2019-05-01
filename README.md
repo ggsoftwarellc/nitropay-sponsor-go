@@ -5,6 +5,11 @@
 Currently creates a signed token, for passing user identity to sponsor client library.
 
 ```golang
-	s, _ := NewNPSigner(privateKey)
-	token, _ := s.Sign(userID)
+    import sponsor "github.com/ggsoftware/nitropay-sponsor-go"
+
+    s, _ := sponsor.NewSigner(privateKey)
+	userInfo := UserInfo{
+		UserID: userID,
+	}
+	token, _ := s.Sign(userInfo)
 ```

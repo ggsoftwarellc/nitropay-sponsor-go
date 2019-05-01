@@ -2,16 +2,17 @@ package sponsor
 
 import (
 	"encoding/json"
+	"time"
 
 	jose "gopkg.in/square/go-jose.v2"
 )
 
-type NPSigner struct {
+type Signer struct {
 	signer jose.Signer
 }
 
-func NewNPSigner(privateKey string) (*NPSigner, error) {
-	s := NPSigner{}
+func NewSigner(privateKey string) (*Signer, error) {
+	s := Signer{}
 	signer, err := jose.NewSigner(jose.SigningKey{Algorithm: jose.HS512, Key: []byte(privateKey)}, nil)
 	if err != nil {
 		return nil, err
@@ -20,13 +21,19 @@ func NewNPSigner(privateKey string) (*NPSigner, error) {
 	return &s, nil
 }
 
-type NPToken struct {
+type Token struct {
 	Sub string `json:"sub"`
+	Iat int64  `json:"iat"`
 }
 
-func (s *NPSigner) Sign(sub string) (string, error) {
-	t := NPToken{
-		Sub: sub,
+type UserInfo struct {
+	UserID string
+}
+
+func (s *Signer) Sign(u UserInfo) (string, error) {
+	t := Token{
+		Sub: u.UserID,
+		Iat: time.Now().Unix(),
 	}
 
 	payload, err := json.Marshal(t)
