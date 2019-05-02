@@ -5,9 +5,9 @@
 Currently creates a signed token, for passing user identity to sponsor client library.
 
 ```golang
-import sponsor "github.com/ggsoftware/nitropay-sponsor-go"
+import sponsor "github.com/ggsoftware/nitropay-sponsor-go/v2"
 
-s, _ := sponsor.NewSigner(privateKey)
+s := sponsor.NewSigner(privateKey)
 userInfo := UserInfo{
     UserID: userID,
 }
