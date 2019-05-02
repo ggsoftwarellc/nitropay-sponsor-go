@@ -1,20 +1,17 @@
 package sponsor
 
 import (
-	"encoding/json"
+	"fmt"
 	"testing"
 
-	jose "gopkg.in/square/go-jose.v2"
+	jwt "github.com/dgrijalva/jwt-go"
 )
 
 func TestSign(t *testing.T) {
 	key := "placeholder"
 	userID := "tester"
 
-	s, err := NewSigner(key)
-	if err != nil {
-		t.Error("Unable to create signer: ", err)
-	}
+	s := NewSigner(key)
 
 	userInfo := UserInfo{
 		UserID: userID,
@@ -25,23 +22,21 @@ func TestSign(t *testing.T) {
 		t.Error("Error creating token: ", err)
 	}
 
-	object, err := jose.ParseSigned(token)
+	parsed, err := jwt.Parse(token, func(token *jwt.Token) (interface{}, error) {
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
+		}
+		return []byte(key), nil
+	})
 	if err != nil {
 		t.Error("Error parsing: ", err)
 	}
-
-	payload, err := object.Verify([]byte(key))
-	if err != nil {
-		t.Error("Unable to verify: ", err)
-	}
-
-	nt := Token{}
-	err = json.Unmarshal(payload, &nt)
-	if err != nil {
-		t.Error("Unmarshal payload: ", err)
-	}
-
-	if nt.Sub != userID {
-		t.Error("payload didn't match")
+	
+	if claims, ok := parsed.Claims.(jwt.MapClaims); ok && parsed.Valid {
+		if claims["sub"] != userID {
+			t.Error("payload didn't match")
+		}
+	} else {
+		t.Error("mismatch claims")
 	}
 }

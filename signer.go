@@ -1,29 +1,22 @@
 package sponsor
 
 import (
-	"encoding/json"
-	"time"
+	"time" 
 
-	jose "gopkg.in/square/go-jose.v2"
+	jwt "github.com/dgrijalva/jwt-go"
 )
 
 type Signer struct {
-	signer jose.Signer
+	privateKey []byte
+	token *jwt.Token
 }
 
-func NewSigner(privateKey string) (*Signer, error) {
+func NewSigner(privateKey string) *Signer {
 	s := Signer{}
-	signer, err := jose.NewSigner(jose.SigningKey{Algorithm: jose.HS512, Key: []byte(privateKey)}, nil)
-	if err != nil {
-		return nil, err
-	}
-	s.signer = signer
-	return &s, nil
-}
+	s.privateKey = []byte(privateKey)
+	s.token = jwt.New(jwt.SigningMethodHS512)
 
-type Token struct {
-	Sub string `json:"sub"`
-	Iat int64  `json:"iat"`
+	return &s
 }
 
 type UserInfo struct {
@@ -31,20 +24,9 @@ type UserInfo struct {
 }
 
 func (s *Signer) Sign(u UserInfo) (string, error) {
-	t := Token{
-		Sub: u.UserID,
-		Iat: time.Now().Unix(),
+	s.token.Claims = jwt.MapClaims{
+		"sub": u.UserID,
+		"iat": time.Now().Unix(),
 	}
-
-	payload, err := json.Marshal(t)
-	if err != nil {
-		return "", err
-	}
-
-	object, err := s.signer.Sign(payload)
-	if err != nil {
-		return "", err
-	}
-
-	return object.CompactSerialize()
+	return s.token.SignedString(s.privateKey)
 }
