@@ -1,4 +1,4 @@
-module github.com/ggsoftwarellc/nitropay-sponsor-go/v2
+module github.com/ggsoftwarellc/nitropay-sponsor-go/v3
 
 go 1.12
 
