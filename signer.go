@@ -20,11 +20,13 @@ func NewSigner(privateKey string) *Signer {
 }
 
 type UserInfo struct {
+	SiteID string
 	UserID string
 }
 
 func (s *Signer) Sign(u UserInfo) (string, error) {
 	s.token.Claims = jwt.MapClaims{
+		"iss": u.SiteID,
 		"sub": u.UserID,
 		"iat": time.Now().Unix(),
 	}

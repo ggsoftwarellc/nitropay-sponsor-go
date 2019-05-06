@@ -10,10 +10,12 @@ import (
 func TestSign(t *testing.T) {
 	key := "placeholder"
 	userID := "tester"
+	siteID := "2"
 
 	s := NewSigner(key)
 
 	userInfo := UserInfo{
+		SiteID: siteID,
 		UserID: userID,
 	}
 
@@ -33,7 +35,7 @@ func TestSign(t *testing.T) {
 	}
 	
 	if claims, ok := parsed.Claims.(jwt.MapClaims); ok && parsed.Valid {
-		if claims["sub"] != userID {
+		if claims["sub"] != userID || claims["iss"] != siteID {
 			t.Error("payload didn't match")
 		}
 	} else {
