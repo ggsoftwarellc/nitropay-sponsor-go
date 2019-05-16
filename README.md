@@ -8,7 +8,7 @@ Currently creates a signed token, for passing user identity to sponsor client li
 import sponsor "github.com/ggsoftware/nitropay-sponsor-go/v3"
 
 s := sponsor.NewSigner(privateKey)
-userInfo := UserInfo{
+userInfo := sponsor.UserInfo{
     SiteID: siteID,
     UserID: userID,
 }
