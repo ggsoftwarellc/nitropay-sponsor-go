@@ -9,6 +9,7 @@ import sponsor "github.com/ggsoftware/nitropay-sponsor-go/v3"
 
 s := sponsor.NewSigner(privateKey)
 userInfo := UserInfo{
+    SiteID: siteID,
     UserID: userID,
 }
 token, _ := s.Sign(userInfo)
