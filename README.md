@@ -2,12 +2,12 @@
 
 ## Description
 
-Currently creates a signed token, for passing user identity to sponsor client library.
+Creates a signed token, for passing user identity to sponsor client library.
 
 SiteID and UserID are required, other fields are optional.
 
 ```golang
-import sponsor "github.com/ggsoftware/nitropay-sponsor-go/v3"
+import sponsor "github.com/ggsoftwarellc/nitropay-sponsor-go/v3"
 
 s := sponsor.NewSigner(privateKey)
 userInfo := sponsor.UserInfo{
