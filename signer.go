@@ -1,14 +1,14 @@
 package sponsor
 
 import (
-	"time" 
+	"time"
 
 	jwt "github.com/dgrijalva/jwt-go"
 )
 
 type Signer struct {
 	privateKey []byte
-	token *jwt.Token
+	token      *jwt.Token
 }
 
 func NewSigner(privateKey string) *Signer {
@@ -22,13 +22,19 @@ func NewSigner(privateKey string) *Signer {
 type UserInfo struct {
 	SiteID string
 	UserID string
+	Name   string
+	Email  string
+	Avatar string
 }
 
 func (s *Signer) Sign(u UserInfo) (string, error) {
 	s.token.Claims = jwt.MapClaims{
-		"iss": u.SiteID,
-		"sub": u.UserID,
-		"iat": time.Now().Unix(),
+		"iss":    u.SiteID,
+		"sub":    u.UserID,
+		"iat":    time.Now().Unix(),
+		"name":   u.Name,
+		"email":  u.Email,
+		"avatar": u.Avatar,
 	}
 	return s.token.SignedString(s.privateKey)
 }
