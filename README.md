@@ -19,3 +19,5 @@ userInfo := sponsor.UserInfo{
 }
 token, _ := s.Sign(userInfo)
 ```
+
+You can use `GetUserSubscription(userID)` to look up subscription info for a user.
