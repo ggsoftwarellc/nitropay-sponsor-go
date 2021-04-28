@@ -92,8 +92,6 @@ func (s *Signer) GetUserSubscription(userID string) (*SubscriptionInfo, error) {
 		return nil, err
 	}
 
-	fmt.Println(body)
-
 	si := SubscriptionInfo{}
 
 	err = json.Unmarshal(body, &si)
